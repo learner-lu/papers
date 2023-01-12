@@ -1,3 +1,3 @@
 # Paper
 
-https://learner-lu.github.io/papers/
+https://luzhixing12345.github.io/papers/
