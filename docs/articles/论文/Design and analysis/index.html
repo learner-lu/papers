@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
+    <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
+
+</head>
+<body class="light">
+    <div class='markdown-body'><h1>Design and analysis</h1><p>使用CXL允许加速器直接传输数据, 测试了其在GPU 和FPGA上的表现</p><h2>简介</h2><p>极端异构系统的一个重大挑战是<b>编写应用程序，利用每个计算单元和易于使用的编程模型</b>。另一个挑战是<b>如何在加速器之间有效地共享数据，使得加速器间的通信开销不会抵消加速器卸载的好处</b></p><p>这项工作的目标是评估新的 CXL 协议如何在包含 GPU 和 FPGA 的节点内提供更紧密的集成</p><p>我们分析了当前用于开发同时利用 GPU 和 FPGA 加速器的单个应用程序的方法，然后我们探讨了如何使用 CXL 来实现更简单、性能更高的加速器耦合。我们评估 CXL 以实现加速器更紧密耦合的方法有两个方面。首先，我们使用当前可用的硬件和工具建立了基准测量。其次，我们为 CXL 开发了一个分析模型，可用于评估利用 CXL 实现加速器之间更紧密集成所获得的预期加速</p><h2>背景</h2><p>两个已有使计算机组件紧密结合的协议是NVLink and the OpenCAPI.</p><ul><li>NVLink 提供主机和 GPU 内存之间缓存一致的内存访问，以及比 PCIe 4.0 更高的带宽</li></ul><ul><li>OpenCAPI 建立在 25 GB/sec IBM Bluelink I/O 端口之上，并在主机和加速器内存之间提供高速缓存一致的内存访问</li></ul><p>尽管它们都可以解决加速器紧密耦合的问题,但他们都是专有的. NVLink使NVIDIA GPU专有的, OpenCAPI 是在 Bluelink I/O 设施之上实现的，目前只能在 IBM POWER9 CPU 上找到</p><p>另一种解决方案是构建现成的硬件和软件堆栈. 最早的实例之一是 Tsoi 和 Luk 的 Axel，这是一个异构的节点集群，其中每个节点都包含一个通过 PCIe 连接的 FPGA 和 GPU。为了促进加速器之间的节点内通信，Tsoi 和 Luk 使用共享内存和进程间通信。这种方法的好处是它可以很容易地实现现成的组件和软件。然而，这种方法必须使用主机内存作为交换数据的中间步骤</p><p>除此之外Bittner提出了一种通过PCIe连接GPU和FPGA之间直接通信的方式,自定义IP核或者自定义DMA模块,但缺点也是受限于NVIDIA的GPU和Xilinx的FPGA</p><p>Kobayashi 修改了intel FPGA参考板的支持包中的PCIe控制器, 并且自定义RTL使得FPGA可以向GPU发送数据以及接收来自GPU的数据. 但与Bittner的原因相同,<b>依赖NVIDIA的GPU,且因NVIDIA的GPU软件和系统级的细节不透明所以不可取</b></p></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../论文/CXL-SSD" >论文</a><ul><li><a href="../../论文/CXL-SSD" >CXL-SSD</a></li></ul><ul><li><a href="../../论文/毕设开题报告" >毕设开题报告</a></li></ul><ul><li><a href="../../论文/Pond" >Pond</a></li></ul><ul><li><a href="../../论文/Design and analysis" >Design and analysis</a></li></ul><ul><li><a href="../../论文/gem5" >gem5</a></li></ul></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../论文/Pond","../../论文/gem5","ab")</script><script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+</body>
+</html>
