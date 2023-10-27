@@ -8,3 +8,4 @@ arch:
 - enable-cxl-IMDBMS: 7
 net:
 - DARPA: 1
+- low-rate: 2
