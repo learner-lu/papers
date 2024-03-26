@@ -35,11 +35,22 @@
 
 ### Translation Pass-Through for Near-Native Paging Performance in VMs
 
+## SOCC(ACM Symposium on Cloud Computing)
 
+> [acmsocc](https://acmsocc.org/2023/index.html)
 
 ## EUROSYS
 
 > [eurosys](https://www.eurosys.org/)
+
+## MSST(Massive Storage Systems and Technology)
+
+> [msstconference](https://msstconference.org/MSST-history/2023/index.html)
+> [msstconference MSST-history](https://msstconference.org/MSST-history/)
+
+## TOS(Transactions on Storage)
+
+> [tos](https://dblp.org/db/journals/tos/index.html)
 
 ## 参考
 
@@ -47,3 +58,5 @@
 - [shai](https://shai.pub/)
 - [分布式元数据论文,阅读笔记整理(持续更新)](https://zhuanlan.zhihu.com/p/673282792)
 - [CXL论文阅读笔记整理(持续更新)](https://zhuanlan.zhihu.com/p/673281189)
+- [操作系统方向有哪些经典论文?](https://www.zhihu.com/question/638849154)
+- [cs codex](https://codex.cs.yale.edu/avi/os-book/OS10/important-papers.pdf)
