@@ -1,2 +1,0 @@
-
-# page table on numa

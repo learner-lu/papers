@@ -1,19 +1,17 @@
 .:
 - README: 1
-tier-mm:
-- tpp: 1
-- memtis: 2
-- hemem: 3
-- nimble: 4
-- mitosis: 5
-- thermostat: 6
-- telescope: 7
-- mtm: 8
-- nomad: 9
-- autotiering: 10
-- hydra: 11
-vm:
-- vtmm: 1
-- hugegpt: 2
+- tpp: 2
+- vtmm: 3
+- memtis: 4
+- hugegpt: 5
+- hemem: 6
+- nimble: 7
+- mitosis: 8
+- thermostat: 9
+- telescope: 10
+- mtm: 11
+- nomad: 12
+- autotiering: 13
+- hydra: 14
 cxl:
 - CXL-SSD: 1

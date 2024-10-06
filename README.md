@@ -3,54 +3,23 @@
 
 记录一些笔者比较感兴趣的操作系统论文, README 中为简要索引, 详细部分参见 [os-papers document](https://luzhixing12345.github.io/os-papers/)
 
-## OSDI(Operating Systems Design and Implementation)
+<!-- insert -->
+|paper|short_name|code|
+|:--:|:--:|:--|
+|TPP: Transparent Page Placement for CXL-Enabled Tiered-Memory|tpp|[kernel patch](https://lore.kernel.org/lkml/cover.1637778851.git.hasanalmaruf@fb.com/)|
+|Exploring the Design Space of Page Management for Multi-Tiered Memory Systems|autotiering|[AutoTiering](https://github.com/Sys-KU/AutoTiering)|
+<!-- end -->
 
-> https://www.usenix.org/conference/osdi23
-
-## FAST(File and Storage Technologies)
-
-> https://www.usenix.org/conference/fast20/technical-sessions
-
-## NSDI(Networked Systems Design and Implementation)
-
-> https://www.usenix.org/conference/nsdi23/technical-sessions
-
-## HotOS(Hot Topics in Operating Systems)
-
-> https://sigops.org/s/conferences/hotos/2021/#program
-
-## SOSP(Symposium on Operating Systems Principles)
-
-> https://sosp2023.mpi-sws.org/program.html
->
-> [sosp](http://www.sosp.org/)
-
-## ASPLOS(International Conference on Architectural Support for Programming Languages and Operating Systems)
-
-> [asplos-conference](https://www.asplos-conference.org/)
-
-## USENIX ATC
-
-> [atc](https://www.usenix.org/conferences/byname/131)
-
-### Translation Pass-Through for Near-Native Paging Performance in VMs
-
-## SOCC(ACM Symposium on Cloud Computing)
-
-> [acmsocc](https://acmsocc.org/2023/index.html)
-
-## EUROSYS
-
-> [eurosys](https://www.eurosys.org/)
-
-## MSST(Massive Storage Systems and Technology)
-
-> [msstconference](https://msstconference.org/MSST-history/2023/index.html)
-> [msstconference MSST-history](https://msstconference.org/MSST-history/)
-
-## TOS(Transactions on Storage)
-
-> [tos](https://dblp.org/db/journals/tos/index.html)
+- OSDI: https://www.usenix.org/conference/osdi23
+- FAST: https://www.usenix.org/conference/fast20/technical-sessions
+- HotOS: https://sigops.org/s/conferences/hotos/2021/#program
+- SOSP: http://www.sosp.org/
+- ASPLOS: https://www.asplos-conference.org/
+- USENIX ATC: https://www.usenix.org/conferences/byname/131
+- SOCC: https://acmsocc.org/2023/index.html
+- EUROSYS: https://www.eurosys.org/
+- MSST: https://msstconference.org/MSST-history/
+- TOS: https://dblp.org/db/journals/tos/index.html
 
 ## 参考
 
