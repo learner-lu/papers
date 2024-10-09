@@ -1,12 +1,12 @@
 
-# hydra
+# hugescope
 
 <!-- TODO -->
 
-- 题目: Scalable and Effective Page-table and TLB management on NUMA Systems
-- 会议: USENIX ATC'24
-- 视频: [USENIX ATC '24 - Scalable and Effective Page-table and TLB management on NUMA Systems](https://www.youtube.com/watch?v=SpS0VrDa8nc)
-- 代码: [Hydra-v6.5](https://github.com/NUS-Systems/Hydra-v6.5)
+- 题目: Taming Hot Bloat Under Virtualization with HugeScope
+- 会议: USENIX ACT'24
+- 视频: [USENIX ATC '24 - Taming Hot Bloat Under Virtualization with HUGESCOPE](https://www.youtube.com/watch?v=30Y5-sBz1Wo)
+- 代码: [hugescope-atc24-ae](https://github.com/TELOS-syslab/hugescope-atc24-ae)
 
 ## 研究问题
 
@@ -35,4 +35,3 @@
 > 阅读论文时,有没有引发你思考出新的问题或有待解决的挑战?
 
 ## 摘抄
-

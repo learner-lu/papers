@@ -6,6 +6,16 @@ import yaml
 
 DIR_NAME="md-docs"
 
+def print_color(text: str, color: str):
+    if color == 'green':
+        print(f"\033[32m{text}\033[0m")
+    elif color == 'red':
+        print(f"\033[31m{text}\033[0m")
+    elif color == 'yellow':
+        print(f"\033[33m{text}\033[0m")
+    else:
+        print(text)
+
 class Paper:
     def __init__(self, path: str) -> None:
         self.path = path
@@ -30,13 +40,20 @@ class Paper:
             # print(f"meeting: {self.meeting}")
             # print(f"video: {self.video}")
             # print(f"code: {self.code}")
-            self.is_matched = True
+            
+            # if matched <!-- TODO --> means the paper hasn't been finished
+            if "<!-- TODO -->" in content:
+                self.is_matched = False
+                print_color(f"not finished reading {self.base_name}", "yellow")
+            else:
+                self.is_matched = True
+                print_color(f"finished reading {self.base_name}", "green")
         else:
             self.title = ""
             self.meeting = ""
             self.video = ""
             self.code = ""
-            print("No match found in", path)
+            print_color(f"failed reading {self.base_name}", "red")
             self.is_matched = False
             
 
@@ -63,7 +80,7 @@ def create_table(filename, papers: list[Paper]):
     # |paper|short_name|code|
     # |:--:|:--:|:--|
     # ||||
-    table = "|paper|short_name|code|\n|:--:|:--:|:--|\n"
+    table = "|paper|short_name|code|\n|:--:|:--:|:--:|\n"
     for paper in papers:
         if not paper.is_matched:
             continue

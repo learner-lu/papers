@@ -13,5 +13,7 @@
 - nomad: 12
 - autotiering: 13
 - hydra: 14
+- hugescope: 15
+- dmt: 16
 cxl:
 - CXL-SSD: 1

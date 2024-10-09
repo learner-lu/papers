@@ -1,12 +1,12 @@
 
-# hydra
+# dmt
 
 <!-- TODO -->
 
-- 题目: Scalable and Effective Page-table and TLB management on NUMA Systems
+- 题目: Direct Memory Translation for Virtualized Clouds
 - 会议: USENIX ATC'24
-- 视频: [USENIX ATC '24 - Scalable and Effective Page-table and TLB management on NUMA Systems](https://www.youtube.com/watch?v=SpS0VrDa8nc)
-- 代码: [Hydra-v6.5](https://github.com/NUS-Systems/Hydra-v6.5)
+- 视频: [ASPLOS'24 - Lightning Talks - Session 8B - Direct Memory Translation for Virtualized Clouds](https://www.youtube.com/watch?v=DdIoZ4gDQCE)
+- 代码: [dmt](https://github.com/xlab-uiuc/dmt)
 
 ## 研究问题
 
@@ -35,4 +35,3 @@
 > 阅读论文时,有没有引发你思考出新的问题或有待解决的挑战?
 
 ## 摘抄
-
