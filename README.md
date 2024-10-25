@@ -7,6 +7,7 @@
 |paper|short_name|code|
 |:--:|:--:|:--:|
 |TPP: Transparent Page Placement for CXL-Enabled Tiered-Memory|tpp|[patch](https://lore.kernel.org/lkml/cover.1637778851.git.hasanalmaruf@fb.com/)|
+|vTMM: Tiered Memory Management for Virtual Machines|vtmm|-|
 <!-- end -->
 
 - OSDI: https://www.usenix.org/conference/osdi23

@@ -44,16 +44,16 @@ class Paper:
             # if matched <!-- TODO --> means the paper hasn't been finished
             if "<!-- TODO -->" in content:
                 self.is_matched = False
-                print_color(f"not finished reading {self.base_name}", "yellow")
+                print_color(f"not finished reading {self.base_name}, do it, hurry!", "yellow")
             else:
                 self.is_matched = True
-                print_color(f"finished reading {self.base_name}", "green")
+                print_color(f"finished reading {self.base_name}, good job!", "green")
         else:
             self.title = ""
             self.meeting = ""
             self.video = ""
             self.code = ""
-            print_color(f"failed reading {self.base_name}", "red")
+            print_color(f"failed reading {self.base_name}, what are you waiting for?", "red")
             self.is_matched = False
             
 

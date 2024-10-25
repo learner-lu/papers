@@ -22,7 +22,8 @@
 
 > 现有研究的主要局限或缺点是什么?
 
-
+- Nimble [76]针对大页面迁移进行了优化.在迁移期间,它在内存层之间采用页面交换.这会使性能恶化,因为降级需要在关键路径中等待升级.
+- 与 TPP 类似,AutoTiereing [47] 和 Huang 等人的工作. [28] 使用后台迁移进行降级,并使用优化的 NUMA 平衡 [22] 进行升级.然而,它们基于计时器的热点页面检测会导致计算开销并且通常效率低下,特别是当页面不经常访问时.此外,他们都没有考虑解耦分配和回收路径.我们的评估表明,这对于内存受限的应用程序在内存压力下保持其性能至关重要.
 
 ## 解决方案
 
@@ -35,7 +36,7 @@
 
 ### Chameleon
 
-chameleon 是论文里面提出来的一个工具, 不过没有找到它的开源代码, 流程如下
+chameleon 是论文里面提出来的一个工具, **不过没有找到它的开源代码**, 流程如下
 
 ![20241007220422](https://raw.githubusercontent.com/learner-lu/picbed/master/20241007220422.png)
 
@@ -96,7 +97,9 @@ CXL 节点
 
 - 页面检测: autonuma(NUMA Balancing)
 - 冷热页面分类: LRU
-- 页面迁移: 异步
+- 页面迁移: 异步(在找到回收候选者后,我们不调用交换机制,而是将它们放入单独的降级列表中,并尝试将它们异步迁移到 CXL 节点)
+
+  > mention: 迁移到 NUMA 节点比交换快几个数量级
 
 如果降级期间的迁移失败(例如,由于 CXL 节点上的内存不足),我们将回退到该失败页面的默认回收机制.由于 CXL 节点上的分配对性能并不关键,因此 CXL 节点使用默认的回收机制(例如,分页到交换设备).如果有多个 CXL 节点,则**根据节点与 CPU 的距离选择降级目标**.尽管可以采用其他复杂的算法来根据 CXL 节点的状态动态选择降级目标,但这种简单的基于距离的静态机制被证明是有效的.
 
@@ -104,17 +107,54 @@ CXL 节点
 > 
 > 有关页面监控的总结见 [telescope](./telescope.md)
 
-页面回收
+**页面回收**
 
-Linux 为节点内的每个内存区域维护三个水印(最小、低、高).如果节点的空闲页面总数低于 low_watermark,Linux 会认为该节点面临内存压力并启动该节点的页面回收.在我们的例子中,TPP 将它们降级为 CXL 节点.对本地节点的新分配将停止,直到回收器释放足够的内存以满足 high_watermark.由于分配率较高,回收可能无法跟上,因为它比分配慢.回收器检索的内存可能很快就会填满以满足分配请求.因此,本地内存分配频繁停止,更多页面最终出现在 CXL 节点中,最终降低应用程序性能.在内存严重受限的多 NUMA 系统中,我们应该主动在本地节点上维护合理的可用内存空间.这有两个方面的帮助.首先,新的分配突发(通常与请求处理相关,因此既短暂又热门)可以直接映射到本地节点.其次,本地节点可以接受 CXL 节点上捕获的热点页面的升级.为了实现这一点,我们将"回收停止"和"新分配发生"机制的逻辑解耦.我们在本地节点上继续异步后台回收过程,直到其空闲页面总数达到 demotion_watermark,而如果空闲页面计数满足不同的水​​位线 – Allocation_watermark(图 12 中的 2),则可能会发生新的分配.请注意,降级水位线始终设置为高于分配水位线和低水位线的较高值,以便我们始终回收更多以维持可用内存空间.需要回收的积极程度通常取决于应用程序行为和可用资源.例如,如果应用程序具有较高的页面分配需求,但其大部分内存不经常访问,则积极的回收可以帮助维护可用内存空间.另一方面,如果频繁访问的页面数量大于本地节点的容量,积极的回收将破坏 NUMA 节点上的热内存.考虑到这些,为了调整本地节点上回收过程的积极性,我们提供了一个用户空间 sysctl 接口()来控制触发本地节点上回收的可用内存阈值.默认情况下,根据经验,其值设置为 2%,这意味着只要本地节点的容量只有 2% 可供消耗,回收就会开始.可以使用工作负载监控工具[73]来动态调整该值
+Linux 为节点内的每个内存区域维护三个水印(min, low, high).
 
-/proc/sys/vm/watermark_scale_factor
+- 如果节点的空闲页面总数低于 low_watermark, Linux 会认为该节点面临内存压力并启动该节点的页面回收.在我们的例子中,TPP 将它们降级为 CXL 节点.对本地节点的新分配将停止,直到回收器释放足够的内存以满足 high_watermark.
+- sysctl 接口 /proc/sys/vm/watermark_scale_factor 控制水位线
+
+**页面提升**
+
+由于本地节点上的内存压力增加,新页面可能经常被分配给 CXL 节点.此外,降级页面也可能稍后变得热门. 从远程 CPU 访问的页面将迁移到该 CPU 的本地内存节点称为提升.
+
+如果没有任何提升机制,热点页面将始终被困在 CXL 节点中并损害应用程序性能.为了提升此类页面,我们增强了 Linux 的 NUMA 平衡 [22].  CXL 内存的 NUMA 平衡.在 NUMA 平衡中,内核任务定期对每个内存节点上的进程内存子集(默认情况下为 256MB 页面)进行采样.当 CPU 访问采样页时,会生成次要页错误(称为 NUMA 提示错误).
+
+由于对页面进行采样以查找本地节点的热内存会产生不必要的 NUMA 提示故障开销,因此我们**仅将采样限制为 CXL 节点**.
+
+NUMA hint fault 发生时默认的 numa balance 策略会立即将其提升, 但是这些升级后的页面可能又会马上降级, 导致抖动
+
+为了解决这个问题, 应该在操作系统维护的 LRU 列表中的位置来检查页面的年龄.
+
+- 如果故障页面处于 inactive LRU,我们不会立即考虑该页面进行升级,因为它可能是不经常访问的页面.
+- 仅当在active LRU 中找到故障页面时,我们才将其视为升级候选页面.这大大减少了提升的流量.
+
+操作系统通过使用 LRU(最近最少使用)列表进行内存回收.当内存节点没有压力且回收未触发时,inactive LRU 列表中的页面不会自动移动到active LRU 列表.由于 CXL 内存节点不总是处于压力状态,故障页面经常停留在inactive LRU 列表中,从而绕过了页面升级过滤器.
+
+为解决这个问题,当在inactive LRU 列表中发现故障页面时,会将该页面标记为已访问,并**立即将其移到active LRU 列表中**(如第 2 步所示).如果在下一次 NUMA 页面故障提示时页面仍然处于"热"状态,它将保留在 active LRU 列表中,并被提升到本地节点(第 3 步所示).这种做法为 TPP 增加了一些滞后性.
+
+Linux 对匿名页面和文件页面**分别维护独立的 LRU 列表**,因此不同类型的页面根据其 LRU 大小和活跃度具有**不同的提升速率**.这加速了热页在跨内存节点中的收敛过程.
+
+![20241011154132](https://raw.githubusercontent.com/learner-lu/picbed/master/20241011154132.png)
+
+> [!QUESTION]
+> 这个问题在 MGLRU 中还存在么?
 
 ## 实验
 
 > 实验是如何设计的? 结果如何证明了论文方法的有效性?是否有对比实验?
 
+以应用的带宽作为性能指标, 不涉及磁盘 swap
 
+CXL 用的 FPGA, 测试了两种内存比例, 本地:CXL 2:1 & 1:4
+
+> [!NOTE]
+> 这篇论文的实验部分做的有点迷, 我没太看懂, 一直在讨论 traffic 
+
+将活动 LRU 页面视为升级候选者有助于 TPP 为页面升级添加滞后.这使得页面提升率降低了11倍.随后升级的降级页面数量也减少了 50%.虽然降级率下降了4% (figure 18)
+
+> [!QUESTION]
+> MGLRU 中的 refault 策略是不是会更好
 
 ## 个人思考
 
@@ -147,3 +187,4 @@ However, Linux's memory management mechanism is designed for homogeneous CPU-att
 CXL for Designing Tiered-Memory Systems. CXL [7] is an open, industry-supported interconnect based on the PCI Express (PCIe) interface. It enables high-speed, low latency communication between the host processor and devices (e.g., accelerators, memory buffers, smart I/O devices, etc.) while expanding memory capacity and bandwidth. CXL provides byte addressable memory in the same physical address space and allows transparent memory allocation using standard memory allocation APIs. It allows cache-line granularity access to the connected devices and underlying hardware maintains coherency and consistency. With PCIe 5.0, CPU to CXL interconnect bandwidth will be similar to the cross-socket interconnects (Figure 5) on a dual-socket machine. CXL-Memory access latency is also similar to the NUMA access latency. CXL adds around 50-100 nanoseconds of extra latency over normal DRAM access. This NUMA-like behavior with main memory-like access semantics makes CXL-Memory a good candidate for the slow-tier in datacenter memory hierarchies. CXL solutions are being developed and incorporated by leading chip providers [1, 4, 9, 21, 24, 25]. All the tools, drivers, and OS changes required to support CXL are open sourced so that anyone can contribute and benefit directly without relying on single supplier solutions. CXL relaxes most of the memory subsystem limitations mentioned earlier. It enables flexible memory subsystem designs with desired memory bandwidth, capacity, and cost-per-GB ratio based on workload demands. This helps scale compute and memory resources independently and ensure a better utilization of stranded resources
 
 > 用于设计分层内存系统的 CXL. CXL [7] 是一种基于 PCI Express (PCIe) 接口的开放式、业界支持的互连.它支持主机处理器和设备(例如加速器、内存缓冲区、智能 I/O 设备等)之间的高速、低延迟通信,同时扩展内存容量和带宽. CXL 在同一物理地址空间中提供字节可寻址内存,并允许使用标准内存分配 API 进行透明内存分配.它允许对连接的设备进行缓存行粒度访问,并且底层硬件保持连贯性和一致性.借助 PCIe 5.0,CPU 到 CXL 互连带宽将类似于双插槽计算机上的跨插槽互连(图 5). CXL-Memory 访问延迟也与 NUMA 访问延迟类似.与正常 DRAM 访问相比,CXL 增加了大约 50-100 纳秒的额外延迟.这种类似 NUMA 的行为以及类似主内存的访问语义使得 CXL-Memory 成为数据中心内存层次结构中慢速层的良好候选者. CXL 解决方案正在由领先的芯片提供商开发和整合 [1,4,9,21,24,25].支持 CXL 所需的所有工具、驱动程序和操作系统更改都是开源的,因此任何人都可以直接做出贡献并受益,而无需依赖单一供应商解决方案. CXL 放宽了前面提到的大部分内存子系统限制.它支持灵活的内存子系统设计,根据工作负载需求提供所需的内存带宽、容量和每 GB 成本比率.这有助于独立扩展计算和内存资源,并确保更好地利用闲置资源
+

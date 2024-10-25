@@ -1,12 +1,12 @@
 
-# memtis
+# HeteroOS
 
 <!-- TODO -->
 
-- 题目: Memtis: Efficient Memory Tiering with Dynamic Page Classification and Page Size Determination
-- 会议: SOSP'23
-- 视频: [youtube watch](https://www.youtube.com/watch?v=_Gxt0zdD3RU)
-- 代码: [memtis](https://github.com/cosmoss-jigu/memtis)
+- 题目: Heteroos: OS Design for Heterogeneous Memory Management in Datacenter
+- 会议: ISCA'17
+- 视频: -
+- 代码: -
 
 ## 研究问题
 

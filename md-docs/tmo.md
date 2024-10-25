@@ -1,12 +1,12 @@
 
-# memtis
+# tmo
 
 <!-- TODO -->
 
-- 题目: Memtis: Efficient Memory Tiering with Dynamic Page Classification and Page Size Determination
-- 会议: SOSP'23
-- 视频: [youtube watch](https://www.youtube.com/watch?v=_Gxt0zdD3RU)
-- 代码: [memtis](https://github.com/cosmoss-jigu/memtis)
+- 题目: TMO: Transparent Memory Offloading in Datacenters
+- 会议: ASPLOS'22
+- 视频: 
+- 代码: [oomd](https://github.com/facebookincubator/oomd)
 
 ## 研究问题
 

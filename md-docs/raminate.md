@@ -1,12 +1,12 @@
 
-# memtis
+# raminate
 
 <!-- TODO -->
 
-- 题目: Memtis: Efficient Memory Tiering with Dynamic Page Classification and Page Size Determination
-- 会议: SOSP'23
-- 视频: [youtube watch](https://www.youtube.com/watch?v=_Gxt0zdD3RU)
-- 代码: [memtis](https://github.com/cosmoss-jigu/memtis)
+- 题目: Hypervisorbased Virtualization for Hybrid Main Memory Systems
+- 会议: SoCC'16
+- 视频: -
+- 代码: -
 
 ## 研究问题
 
