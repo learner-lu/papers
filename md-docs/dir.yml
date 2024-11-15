@@ -2,6 +2,7 @@
 - README: 1
 - tpp: 2
 - vtmm: 3
+- hugescope: 3.5
 - memtis: 4
 - hugegpt: 5
 - hemem: 6
@@ -12,9 +13,9 @@
 - mtm: 11
 - nomad: 12
 - autotiering: 13
-- hydra: 14
-- hugescope: 15
+- hydra: 15
 - dmt: 16
 - tmo: 17
 - raminate: 18
 - HeteroOS: 19
+- hotbox: 20

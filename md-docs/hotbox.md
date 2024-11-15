@@ -1,10 +1,10 @@
 
-# telescope
+# hotbox
 
 <!-- TODO -->
 
-- 题目: Telescope: Telemetry for Gargantuan Memory Footprint Applications
-- 会议: USENIX ATC'24
+- 题目: Reconsidering OS memory optimizations in the presence of disaggregated memory
+- 会议: ISMM'22
 - 视频: 
 - 代码: 
 
@@ -16,7 +16,7 @@
 
 > 现有研究的主要局限或缺点是什么?
 
-![20241111002116](https://raw.githubusercontent.com/learner-lu/picbed/master/20241111002116.png)
+
 
 ## 设计
 

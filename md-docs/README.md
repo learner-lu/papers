@@ -6,6 +6,7 @@
 |:--:|:--:|:--:|
 |TPP: Transparent Page Placement for CXL-Enabled Tiered-Memory|tpp|[patch](https://lore.kernel.org/lkml/cover.1637778851.git.hasanalmaruf@fb.com/)|
 |vTMM: Tiered Memory Management for Virtual Machines|vtmm|-|
+|Taming Hot Bloat Under Virtualization with HugeScope|hugescope|[hugescope-atc24-ae](https://github.com/TELOS-syslab/hugescope-atc24-ae)|
 <!-- end -->
 
 - OSDI: https://www.usenix.org/conference/osdi23
